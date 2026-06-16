@@ -1,0 +1,9 @@
+nasdaq_path: "data/raw/nasdaq100_with_meta.parquet"
+qqq_path: "data/raw/QQQ_1m.parquet"
+output_dir: "outputs"
+
+date_column: "date"
+symbol_column: "symbol"
+price_column: "close"
+sector_column: "sic_description"
+market_cap_column: "market_cap"

@@ -1,0 +1,14 @@
+correlation_window_days: 60
+sma_window_minutes: 15
+
+leader_edge: 0.006
+follower_edge: 0.002
+
+top_n_pairs: 50
+min_price: 10.0
+
+use_sector_column: "sic_description"
+use_price_column: "close"
+
+allow_multiple_positions_same_follower: false
+allow_long_and_short_same_follower_same_minute: false

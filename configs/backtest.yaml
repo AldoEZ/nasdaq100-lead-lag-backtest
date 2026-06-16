@@ -1,0 +1,9 @@
+initial_capital: 1000000.0
+notional_per_trade: 100000.0
+transaction_cost_per_share: 0.0035
+
+market_open: "09:30"
+market_close: "16:00"
+force_exit_time: "15:55"
+
+timestamp_assumption: "timestamps_are_new_york_market_time"
