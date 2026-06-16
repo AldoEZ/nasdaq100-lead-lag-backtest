@@ -1,0 +1,41 @@
+[project]
+name = "nasdaq100-lead-lag-backtest"
+version = "0.1.0"
+description = "Intraday lead-lag backtest on Nasdaq-100 equities with QQQ benchmark comparison."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "polars",
+    "duckdb",
+    "pyarrow",
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "pyyaml",
+    "scipy",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "pre-commit",
+    "jupyter",
+    "ipykernel",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

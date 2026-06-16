@@ -1,2 +1,55 @@
-nasdaq100_with_meta.parquet
-QQQ_1m.parquet
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data files
+data/raw/*
+data/interim/*
+data/processed/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+
+# Outputs
+outputs/equity_curves/*
+outputs/trade_logs/*
+outputs/performance/*
+outputs/plots/*
+outputs/report/*
+!outputs/equity_curves/.gitkeep
+!outputs/trade_logs/.gitkeep
+!outputs/performance/.gitkeep
+!outputs/plots/.gitkeep
+!outputs/report/.gitkeep
+
+# Large files
+*.parquet
+*.csv
+*.xlsx
+
+# OS
+.DS_Store
+Thumbs.db
+
+# original docs
+docs/original
+
+*.egg-info/
