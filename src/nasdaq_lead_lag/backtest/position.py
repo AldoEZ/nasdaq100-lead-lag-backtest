@@ -1,12 +1,14 @@
 from dataclasses import dataclass
-from datetime import datetime
+from typing import Any, Literal
+
+Side = Literal["LONG", "SHORT"]
 
 @dataclass
 class Position:
     leader: str
     follower: str
-    side: str
-    entry_time: datetime
+    side: Side
+    entry_time: Any
     entry_price: float
     quantity: int
     notional: float
@@ -14,3 +16,6 @@ class Position:
     entry_reason: str
     correlation: float
     sector: str
+    leader_entry_price: float
+    leader_base_sma_entry: float
+    follower_base_sma_entry: float
