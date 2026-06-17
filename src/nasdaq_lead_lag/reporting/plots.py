@@ -9,6 +9,7 @@ def plot_single_equity_curve(
     equity_col: str,
     label: str,
     output_path: str | Path,
+    title: str = "Equity Curve",
     log_scale: bool = True,
 ) -> None:
     output_path = Path(output_path)
@@ -20,7 +21,7 @@ def plot_single_equity_curve(
     if log_scale:
         plt.yscale("log")
     
-    plt.title("QQQ Buy-and-Hold Equity Curve")
+    plt.title(title)
     plt.xlabel("Date")
     plt.ylabel("Equity")
     plt.legend()
@@ -34,13 +35,14 @@ def plot_drawdown_curve(
     drawdown_col: str,
     label: str,
     output_path: str | Path,
+    title: str = "Drawdown",
 ) -> None:
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     
     plt.figure(figsize=(12, 6))
     plt.plot(data[date_col], data[drawdown_col], label=label)
-    plt.title("QQQ Buy-and-Hold Drawdown")
+    plt.title(title)
     plt.xlabel("Date")
     plt.ylabel("Drawdown")
     plt.legend()
