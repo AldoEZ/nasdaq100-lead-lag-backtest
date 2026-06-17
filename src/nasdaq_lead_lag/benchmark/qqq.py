@@ -1,4 +1,4 @@
-from datetime import time
+from datetime import date, time
 from pathlib import Path
 
 import polars as pl
@@ -29,11 +29,7 @@ def load_qqq_data(path: str | Path) -> pl.DataFrame:
     if missing_columns:
         raise ValueError(f"Missing required QQQ columns: {missing_columns}")
     
-    return (
-        data.select(REQUIRED_QQQ_COLUMNS)
-        .sort("date")
-        .collect()
-    )
+    return data.select(REQUIRED_QQQ_COLUMNS).sort("date").collect()
 
 def add_trading_date_time(data: pl.DataFrame, date_col: str = "date") -> pl.DataFrame:
     return data.with_columns(
@@ -49,16 +45,23 @@ def filter_regular_session(
 ) -> pl.DataFrame:
     data = add_trading_date_time(data, date_col=date_col)
     
-    return (
-        data.filter(
-            pl.col("trading_time").is_between(
-                market_open,
-                market_close,
-                closed="both",
-            )
+    return data.filter(
+        pl.col("trading_time").is_between(
+            market_open,
+            market_close,
+            closed="both",
         )
-        .sort(date_col)
-    )
+    ).sort(date_col)
+
+def filter_date_range(
+    data: pl.DataFrame,
+    start_date: date,
+    end_date: date,
+) -> pl.DataFrame:
+    return data.filter(
+        pl.col("trading_date") >= start_date,
+        pl.col("trading_date") <= end_date,
+    ).sort("date")
 
 def build_buy_and_hold_equity(
     data: pl.DataFrame,
@@ -75,13 +78,10 @@ def build_buy_and_hold_equity(
     if first_price is None or first_price <= 0:
         raise ValueError(f"Invalid first benchmark price: {first_price}")
     
-    return (
-        data.with_columns(
-            (initial_capital * pl.col(price_col) / first_price).alias(equity_col)
-        )
-        .with_columns(
-            pl.col(equity_col).pct_change().fill_null(0.0).alias(return_col)
-        )
+    return data.with_columns(
+        (initial_capital * pl.col(price_col) / first_price).alias(equity_col)
+    ).with_columns(
+        pl.col(equity_col).pct_change().fill_null(0.0).alias(return_col)
     )
 
 def to_daily_equity(
@@ -101,9 +101,7 @@ def to_daily_equity(
             pl.col(equity_col).last().alias(equity_col),
         )
         .sort("trading_date")
-        .with_columns(
-            pl.col(equity_col).pct_change().fill_null(0.0).alias(return_col)
-        )
+        .with_columns(pl.col(equity_col).pct_change().fill_null(0.0).alias(return_col))
     )
 
 def build_qqq_benchmark(
@@ -122,5 +120,32 @@ def build_qqq_benchmark(
     
     return build_buy_and_hold_equity(
         qqq_regular_session,
+        initial_capital=initial_capital,
+    )
+
+def build_qqq_benchmark_for_period(
+    path: str | Path,
+    start_date: date,
+    end_date: date,
+    initial_capital: float,
+    market_open: time,
+    market_close: time,
+) -> pl.DataFrame:
+    qqq_data = load_qqq_data(path)
+    
+    qqq_regular_session = filter_regular_session(
+        qqq_data,
+        market_open=market_open,
+        market_close=market_close,
+    )
+    
+    qqq_period = filter_date_range(
+        qqq_regular_session,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    
+    return build_buy_and_hold_equity(
+        qqq_period,
         initial_capital=initial_capital,
     )

@@ -64,9 +64,30 @@ def plot_equity_curves(
     plt.plot(data[date_col], data[strategy_col], label="Strategy")
     plt.plot(data[date_col], data[benchmark_col], label="QQQ Buy & Hold")
     plt.yscale("log")
-    plt.title("Equity Curve - Log Scale")
+    plt.title("Strategy vs QQQ Equity Curve - Log Scale")
     plt.xlabel("Date")
     plt.ylabel("Equity")
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(output_path)
+    plt.close()
+
+def plot_drawdown_curves(
+    data: pd.DataFrame,
+    date_col: str,
+    strategy_drawdown_col: str,
+    benchmark_drawdown_col: str,
+    output_path: str | Path,
+) -> None:
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    plt.figure(figsize=(12, 6))
+    plt.plot(data[date_col], data[strategy_drawdown_col], label="Strategy")
+    plt.plot(data[date_col], data[benchmark_drawdown_col], label="QQQ Buy & Hold")
+    plt.title("Strategy vs QQQ Drawdown")
+    plt.xlabel("Date")
+    plt.ylabel("Drawdown")
     plt.legend()
     plt.tight_layout()
     plt.savefig(output_path)
